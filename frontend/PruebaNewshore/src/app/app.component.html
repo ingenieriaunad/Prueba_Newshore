@@ -1,0 +1,120 @@
+<div class="overlay d-flex align-items-center justify-content-center position-fixed top-0 start-0 w-100 h-100" *ngIf="isLoading">
+  <div class="spinner-border text-primary" role="status">
+    <span class="visually-hidden">Loading...</span>
+  </div>
+</div>
+<div class="container-fluid vh-100 bg-light">
+  <div class="row px-5">
+    <div class="col-md-12 pt-4">
+      <h1>
+        <span class="text-primary">BUSCADOR DE</span>
+        <span class="text-info"> VUELOS</span>
+      </h1>
+      <hr/>
+    </div>
+    <div class="col-md-8">
+      <div class="card">
+        <div class="card-header bg-primary text-white">RESULTADOS</div>
+        <div class="card-body">
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>Vuelo</th>
+                <th>Origen</th>
+                <th>Destino</th>
+                <th>Valor</th>
+                <th>
+                  Transportista
+                </th>
+                <th>
+                  Número
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr  *ngFor="let flight of data?.journey?.flights; let i=index">
+                <!-- <td>colocar el index</td> -->
+                <td>{{ i+1 }}</td>
+                <td>{{ flight.origin }}</td>
+                <td>{{ flight.destination }}</td>
+                <td>{{ flight.price }}</td>
+                <td>{{ flight.transport?.flightCarrier }}</td>
+                <td>{{ flight.transport?.flightNumber }}</td>
+              </tr>
+              <tr *ngIf="showNoResults">
+                <td colspan="6" class="text-center">
+                  {{ noResultsMessage }}
+                </td>
+              </tr>
+              <!-- total viaje -->
+              <tr *ngIf="data?.journey?.price">
+                <td colspan="4">
+                  <strong class="mx-2">Origen:</strong>{{ data?.journey?.origin }}
+                  <strong class="mx-2">Llegada:</strong>{{ data?.journey?.destination }}
+
+                </td>
+                <td colspan="2" class="text-end">
+                  <strong class="mx-2">Total viaje:</strong>{{ data?.journey?.price }}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card">
+        <div class="card-header text-uppercase text-white bg-primary">Busca tu vuelo</div>
+        <div class="card-body">
+          <div class="form-floating mb-3">
+            <input
+              type="text"
+              class="form-control"
+              id="origin"
+              name="origin"
+              placeholder="MZL"
+              [(ngModel)]="form.origin"
+              [ngModelOptions]="{ updateOn: 'blur' }" [value]="form.origin | uppercase"
+            >
+            <label for="floatingInput">Origen</label>
+            <div class="alert alert-danger mt-2" role="alert" *ngIf="errorOrigin">
+              <p>{{ errorOriginMessage }}</p>
+            </div>
+          </div>
+          <div class="form-floating mb-3">
+            <input
+              type="text"
+              class="form-control"
+              id="destination"
+              placeholder="BOG"
+              [(ngModel)]="form.destination"
+              [ngModelOptions]="{ updateOn: 'blur' }" [value]="form.destination | uppercase"
+            >
+            <label for="destination">Destino</label>
+            <div class="alert alert-danger mt-2" role="alert" *ngIf="errorDestination">
+              <p>{{ errorDestinationMessage }}</p>
+            </div>
+          </div>
+          <div class="form-floating mb-3">
+            <select
+              class="form-select"
+              id="typeFlight"
+              [(ngModel)]="form.typeFlight"
+            >
+              <option value="0" selected>Directo</option>
+              <option value="1">Escalado</option>
+              <option value="2">Ida y vuelta</option>
+            </select>
+            <label for="typeFlight">Tipo de vuelo</label>
+          </div>
+        </div>
+        <div class="card-footer text-end">
+          <button
+            class="btn btn-primary"
+            (click)="searchFlights()"
+          >Buscar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
